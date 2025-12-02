@@ -46,9 +46,9 @@ export async function searchTools(query: string): Promise<AITool[]> {
   );
 }
 
-export async function getFeaturedTools(limit: number = 3): Promise<AITool[]> {
-  const tools = await getAllTools();
-  return tools
-    .sort((a, b) => (b.rating || 0) - (a.rating || 0))
-    .slice(0, limit);
-}
+// export async function getFeaturedTools(limit: number = 3): Promise<AITool[]> {
+//   const tools = await getAllTools();
+//   return tools
+//     .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+//     .slice(0, limit);
+// }
