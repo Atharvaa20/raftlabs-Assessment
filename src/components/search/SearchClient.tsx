@@ -1,31 +1,30 @@
-// src/app/search/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Search, X, Loader2 } from 'lucide-react';
-import Link from 'next/link';
 import { AITool } from '@/data/aiTools';
 import { searchTools } from '@/lib/api';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 type SortOption = 'relevance' | 'newest' | 'rating' | 'name';
 
-interface SearchFilters {
-  category: string;
-  sort: SortOption;
+interface SearchClientProps {
+  initialQuery: string;
 }
 
-export default function SearchPage() {
+export default function SearchClient({ initialQuery }: SearchClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const query = searchParams.get('q') || '';
-  const [searchQuery, setSearchQuery] = useState(query);
+  const [searchQuery, setSearchQuery] = useState(initialQuery || '');
   const [searchResults, setSearchResults] = useState<AITool[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [filters, setFilters] = useState<SearchFilters>({
+  const [hasSearched, setHasSearched] = useState(false);
+  const [filters, setFilters] = useState({
     category: '',
-    sort: 'relevance'
+    sort: 'relevance' as SortOption
   });
 
   // Clear search query
@@ -40,6 +39,7 @@ export default function SearchPage() {
     const search = async () => {
       if (!query) {
         setSearchResults([]);
+        setHasSearched(false);
         return;
       }
 
@@ -50,6 +50,7 @@ export default function SearchPage() {
       try {
         const results = await searchTools(query);
         setSearchResults(results);
+        setHasSearched(true);
       } catch (err) {
         console.error('Search failed:', err);
         setError('Failed to load search results. Please try again.');
@@ -61,7 +62,7 @@ export default function SearchPage() {
 
     const timer = setTimeout(search, 300);
     return () => clearTimeout(timer);
-  }, [query, router]);
+  }, [query]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -259,18 +260,22 @@ export default function SearchPage() {
                   <p className="mt-3 text-sm text-gray-500 dark:text-gray-300 line-clamp-2">
                     {tool.description}
                   </p>
-                  {tool.reviews && (
+                  {(tool.rating || tool.reviews) && (
                     <div className="mt-3 flex items-center">
-                      <div className="flex items-center">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <span key={star} className="text-yellow-400">
-                            {star <= 4 ? '★' : '☆'}
-                          </span>
-                        ))}
-                      </div>
-                      <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
-                        {tool.reviews}
-                      </span>
+                      {tool.rating !== undefined && (
+                        <div className="flex items-center">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <span key={star} className="text-yellow-400">
+                              {star <= Math.floor(tool.rating!) ? '★' : '☆'}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      {tool.reviews && (
+                        <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
+                          {tool.reviews}
+                        </span>
+                      )}
                     </div>
                   )}
                 </div>

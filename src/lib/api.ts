@@ -49,14 +49,18 @@ export async function searchTools(query: string): Promise<AITool[]> {
 
     return tools.filter(tool => {
       try {
-        // Check if tool properties exist before calling methods on them
+        // Safely check and compare tool properties
         const nameMatch = tool.name?.toLowerCase().includes(queryLower) || false;
         const descMatch = tool.description?.toLowerCase().includes(queryLower) || false;
-        const categoryMatch = tool.category?.toLowerCase().includes(queryLower) || false;
-        const featuresMatch = Array.isArray(tool.features) && 
-          tool.features.some(feature => 
-            typeof feature === 'string' && feature.toLowerCase().includes(queryLower)
-          );
+        const categoryMatch = Array.isArray(tool.category)
+          ? tool.category.some(cat => cat.toLowerCase().includes(queryLower))
+          : (tool.category?.toLowerCase().includes(queryLower) || false);
+        
+        const featuresMatch = Array.isArray(tool.features)
+          ? tool.features.some(feature => 
+              typeof feature === 'string' && feature.toLowerCase().includes(queryLower)
+            )
+          : false;
 
         return nameMatch || descMatch || categoryMatch || featuresMatch;
       } catch (err) {
