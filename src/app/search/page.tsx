@@ -1,25 +1,38 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Search, X, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { AITool } from '@/data/aiTools';
 import { searchTools } from '@/lib/api';
 
+type SortOption = 'relevance' | 'newest' | 'rating' | 'name';
+
+interface SearchFilters {
+  category: string;
+  sort: SortOption;
+}
+
 export default function SearchPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const query = searchParams.get('q') || '';
   const [searchQuery, setSearchQuery] = useState(query);
   const [searchResults, setSearchResults] = useState<AITool[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
+  const [filters, setFilters] = useState<SearchFilters>({
+    category: '',
+    sort: 'relevance'
+  });
 
   // Clear search query
   const clearSearch = () => {
     setSearchQuery('');
     setSearchResults([]);
+    router.push('/search');
   };
 
   // Perform search when query changes
@@ -48,24 +61,9 @@ export default function SearchPage() {
       }
     };
 
-    search();
-  }, [query]);
-    }
-  }, []);
-
-  // Debounce search
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (query) {
-        setSearchQuery(query);
-        performSearch(query);
-      } else {
-        setSearchResults([]);
-      }
-    }, 300);
-
+    const timer = setTimeout(search, 300);
     return () => clearTimeout(timer);
-  }, [query, performSearch]);
+  }, [query]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,7 +74,10 @@ export default function SearchPage() {
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFilters(prev => ({ ...prev, [name]: value }));
+    setFilters(prev => ({
+      ...prev,
+      [name]: name === 'sort' ? value as SortOption : value
+    }));
   };
 
   // Apply filters and sorting
@@ -112,9 +113,10 @@ export default function SearchPage() {
   // Get unique categories for filter
   const categories = Array.from(
     new Set(
-      searchResults.flatMap(tool => 
-        Array.isArray(tool.category) ? tool.category : [tool.category]
-      )
+      searchResults.flatMap(tool => {
+        const categories = tool.category || [];
+        return Array.isArray(categories) ? categories : [categories];
+      }).filter(Boolean)
     )
   ).sort((a, b) => a.localeCompare(b));
 

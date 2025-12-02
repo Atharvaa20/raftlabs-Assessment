@@ -35,15 +35,39 @@ export async function getCategories(): Promise<string[]> {
 }
 
 export async function searchTools(query: string): Promise<AITool[]> {
-  const tools = await getAllTools();
-  const queryLower = query.toLowerCase();
-  return tools.filter(
-    tool =>
-      tool.name.toLowerCase().includes(queryLower) ||
-      tool.description.toLowerCase().includes(queryLower) ||
-      tool.category.toLowerCase().includes(queryLower) ||
-      (tool.features && tool.features.some(feature => feature.toLowerCase().includes(queryLower)))
-  );
+  try {
+    if (!query || typeof query !== 'string') {
+      return [];
+    }
+
+    const tools = await getAllTools();
+    const queryLower = query.trim().toLowerCase();
+    
+    if (!queryLower) {
+      return [];
+    }
+
+    return tools.filter(tool => {
+      try {
+        // Check if tool properties exist before calling methods on them
+        const nameMatch = tool.name?.toLowerCase().includes(queryLower) || false;
+        const descMatch = tool.description?.toLowerCase().includes(queryLower) || false;
+        const categoryMatch = tool.category?.toLowerCase().includes(queryLower) || false;
+        const featuresMatch = Array.isArray(tool.features) && 
+          tool.features.some(feature => 
+            typeof feature === 'string' && feature.toLowerCase().includes(queryLower)
+          );
+
+        return nameMatch || descMatch || categoryMatch || featuresMatch;
+      } catch (err) {
+        console.error('Error filtering tool:', tool, err);
+        return false;
+      }
+    });
+  } catch (error) {
+    console.error('Error in searchTools:', error);
+    return [];
+  }
 }
 
 // export async function getFeaturedTools(limit: number = 3): Promise<AITool[]> {
