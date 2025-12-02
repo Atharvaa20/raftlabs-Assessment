@@ -32,8 +32,7 @@ The AI tools dataset was sourced from "There's An AI For That", a comprehensive 
 - Categories and tags
 - Pricing information
 - User reviews and ratings
-- Launch dates
-- Feature lists
+
 
 ## Data Collection Method
 
