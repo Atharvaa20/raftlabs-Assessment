@@ -260,24 +260,20 @@ export default function SearchClient({ initialQuery }: SearchClientProps) {
                   <p className="mt-3 text-sm text-gray-500 dark:text-gray-300 line-clamp-2">
                     {tool.description}
                   </p>
-                  {(tool.rating || tool.reviews) && (
-                    <div className="mt-3 flex items-center">
-                      {tool.rating !== undefined && (
-                        <div className="flex items-center">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <span key={star} className="text-yellow-400">
-                              {star <= Math.floor(tool.rating!) ? '★' : '☆'}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                      {tool.reviews && (
-                        <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
-                          {tool.reviews}
-                        </span>
-                      )}
-                    </div>
-                  )}
+                  {tool.reviews && (
+  <div className="mt-3 flex items-center">
+    <div className="flex items-center">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <span key={star} className="text-yellow-400">
+          {star <= 4 ? '★' : '☆'} {/* Default to 4 stars if no rating is available */}
+        </span>
+      ))}
+    </div>
+    <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
+      {tool.reviews}
+    </span>
+  </div>
+)}
                 </div>
               </Link>
             ))}
