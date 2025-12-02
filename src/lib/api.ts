@@ -52,3 +52,15 @@ export async function searchTools(query: string): Promise<AITool[]> {
 //     .sort((a, b) => (b.rating || 0) - (a.rating || 0))
 //     .slice(0, limit);
 // }
+export async function getFeaturedTools(limit: number = 3): Promise<AITool[]> {
+  const tools = await getAllTools();
+  return tools
+    .filter(tool => tool.reviews) // Only include tools with reviews
+    .sort((a, b) => {
+      // Convert reviews from string like "100 reviews" to number
+      const aReviews = a.reviews ? parseInt(a.reviews.split(' ')[0]) : 0;
+      const bReviews = b.reviews ? parseInt(b.reviews.split(' ')[0]) : 0;
+      return bReviews - aReviews;
+    })
+    .slice(0, limit);
+}
