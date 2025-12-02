@@ -19,7 +19,7 @@ export default async function Home() {
   const topCategories = [...allCategories]
     .filter((cat): cat is string => Boolean(cat))
     .sort((a, b) => (categoryCounts[b] || 0) - (categoryCounts[a] || 0))
-    .slice(0, 4); // Show top 4 categories
+    .slice(0, 5); // Show top 4 categories
   
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">

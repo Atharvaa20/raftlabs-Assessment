@@ -17,31 +17,15 @@ export default function Footer() {
               Discover and explore the best AI tools to boost your productivity and creativity.
             </p>
             <div className="flex space-x-4">
-              <a 
-                href="https://github.com/yourusername/ai-tools-catalog" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"
-                aria-label="GitHub"
-              >
+              
                 <Github className="h-5 w-5" />
-              </a>
-              <a 
-                href="https://twitter.com/aitoolscatalog" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400"
-                aria-label="Twitter"
-              >
+              
+              
                 <Twitter className="h-5 w-5" />
-              </a>
-              <a 
-                href="mailto:contact@aitoolscatalog.com" 
-                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"
-                aria-label="Email"
-              >
+              
+              
                 <Mail className="h-5 w-5" />
-              </a>
+              
             </div>
           </div>
 
@@ -62,12 +46,12 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
+                <Link href="" className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/submit-tool" className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
+                <Link href="" className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
                   Submit a Tool
                 </Link>
               </li>
@@ -86,7 +70,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/categories/image-generation" className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
+                <Link href="" className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
                   Image Generation
                 </Link>
               </li>
@@ -96,7 +80,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/categories/developer-tools" className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
+                <Link href="" className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
                   Developer Tools
                 </Link>
               </li>
@@ -140,13 +124,13 @@ export default function Footer() {
               &copy; {currentYear} AI Tools Catalog. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link href="/privacy" className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+              <Link href="" className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
                 Privacy Policy
               </Link>
-              <Link href="/terms" className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+              <Link href="" className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
                 Terms of Service
               </Link>
-              <Link href="/cookies" className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+              <Link href="" className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
                 Cookies
               </Link>
             </div>
