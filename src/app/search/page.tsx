@@ -1,23 +1,20 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Search, X, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { AITool } from '@/data/aiTools';
+import { searchTools } from '@/lib/api';
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const query = searchParams.get('q') || '';
   const [searchQuery, setSearchQuery] = useState(query);
   const [searchResults, setSearchResults] = useState<AITool[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [filters, setFilters] = useState({
-    category: '',
-    sort: 'relevance',
-  });
+  const [hasSearched, setHasSearched] = useState(false);
 
   // Clear search query
   const clearSearch = () => {
@@ -26,28 +23,33 @@ export default function SearchPage() {
   };
 
   // Perform search when query changes
-  const performSearch = useCallback(async (searchQuery: string) => {
-    if (!searchQuery.trim()) {
-      setSearchResults([]);
-      return;
-    }
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch search results');
+  useEffect(() => {
+    const search = async () => {
+      if (!query) {
+        setSearchResults([]);
+        setHasSearched(false);
+        return;
       }
-      const data = await response.json();
-      setSearchResults(data.results || []);
-    } catch (err) {
-      console.error('Search failed:', err);
-      setError('Failed to load search results. Please try again.');
-      setSearchResults([]);
-    } finally {
-      setIsLoading(false);
+
+      setIsLoading(true);
+      setError(null);
+      setSearchQuery(query);
+
+      try {
+        const results = await searchTools(query);
+        setSearchResults(results);
+        setHasSearched(true);
+      } catch (err) {
+        console.error('Search failed:', err);
+        setError('Failed to load search results. Please try again.');
+        setSearchResults([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    search();
+  }, [query]);
     }
   }, []);
 
